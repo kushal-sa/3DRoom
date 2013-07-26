@@ -1,0 +1,224 @@
+	
+	<!DOCTYPE html>
+	<html>
+		<head>
+			<script type="text/javascript" src="jquery.js"></script>
+			<link rel="stylesheet" href="./style.css"/>
+			<title>3D Room</title>
+		</head>
+		<body>
+		
+			<div id="space">
+			<div id="cont">
+				<div id="room">
+					<div class="front"></div>
+					<div class="back"></div>
+					<div class="right"></div>
+					<div class="left"></div>
+					<div class="top"></div>
+					<div class="bottom"></div>
+				
+				</div>
+			</div>
+			</div>
+		
+		</body>
+		<script type="text/javascript">
+		
+		console.log("height:"+$(document).height());
+		console.log("width:"+$(document).width());
+		
+		
+var variable={
+				
+					'translate':{x:0,y:0,z:0},
+					'turn':0,
+					'origin':{x:100,y:100,z:1000},
+					'perspective':1000,
+					'rot3d':0,
+					
+					};
+				
+				var pagex,pagey;
+				
+
+				
+				
+				$(window).keypress(move);
+				$(document).one('mousemove',function(e){
+				
+					console.log("x:"+e.pageX);
+					console.log("y:"+e.pageY);
+					pagex=e.pageX;
+					pagey=e.pageY;
+					
+					$(document).on('mousemove',turn_m);
+				
+				});
+				
+				
+				
+									function update(){
+					
+						console.log("Inside Update");
+						
+						var op1=(variable.origin.x)+"px "+(variable.origin.y)+"px "+(variable.origin.z)+"px";
+						var op2="translate3d("+variable.translate.x+"px,"+variable.translate.y+"px,"+variable.translate.z+"px) rotate3d("+(Math.abs(Math.cos(variable.turn*3.14/180)))+",0,"+Math.abs((Math.sin(variable.turn*3.14/180)))+","+variable.rot3d+"deg)  rotateY("+variable.turn+"deg)";
+					
+						$('#cont').css({'transform-origin':op1,'transform':op2});
+					
+					
+						console.log("origin_x:"+variable.origin.x+"  origin_y:"+variable.origin.y+"origin_z:"+variable.origin.z);
+						console.log("translate_x:"+variable.translate.x+"  origin_y:"+variable.translate.y+"origin_z:"+variable.translate.z);
+						console.log("translate_z:"+variable.translate.z);
+						console.log("rot3d:"+variable.rot3d);
+						console.log("turn:"+variable.turn);
+						console.log();
+					
+					
+					}
+					
+				/*	function turn_m(e){
+						
+						
+						if(Math.abs(e.pageX-pagex)>=Math.abs(e.pageY-pagey)){
+						
+							if(e.pageX!==pagex){
+						
+							variable.turn+=(e.pageX>pagex?1:-1);
+						
+							}
+						
+						}
+						
+						else{
+						
+							if(e.pageY!=pagey){
+						
+							variable.rot3d+=(e.pageY>pagey?-0.1:0.1);
+						
+							}
+						
+						
+						}
+
+						
+
+						
+						
+						update();
+						pagex=e.pageX;
+						pagey=e.pageY;
+					
+					}*/
+				
+
+				
+				function move(e){
+				
+					console.log("Inside Move");
+					
+					
+					
+					var fwd=10,
+						side=10;
+					
+
+				
+					switch(e.which){
+					
+						case 119://w
+						case 115:forward();break;//s
+						case 97://a
+						case 100:sideway();break;//d
+					
+					}
+					
+					
+					function forward(){
+					
+						console.log("Inside Forward");
+						//Translating position
+					
+						
+					
+						variable.translate.x+=((e.which===119?-fwd:fwd)*Math.sin(variable.turn*3.14/180));
+						variable.translate.z+=((e.which===119?fwd:-fwd)*Math.cos(variable.turn*3.14/180));
+						
+						//Translating origin
+						
+						variable.origin.x+=((e.which===119?fwd:-fwd)*Math.sin(variable.turn*3.14/180));
+						variable.origin.z-=((e.which===119?fwd:-fwd)*Math.cos(variable.turn*3.14/180));						
+						console.log(variable.turn);
+						
+						update();
+					}
+				
+					function sideway(){
+					
+					
+						console.log("Inside Turn");
+					
+						variable.translate.x-=((e.which===97?-fwd:fwd)*Math.cos(variable.turn*3.14/180));
+						variable.translate.z+=((e.which===97?fwd:-fwd)*Math.sin(variable.turn*3.14/180));
+						
+						//Translating origin
+						
+						variable.origin.x-=((e.which===97?fwd:-fwd)*Math.cos(variable.turn*3.14/180));
+						variable.origin.z-=((e.which===97?fwd:-fwd)*Math.sin(variable.turn*3.14/180));						
+						console.log(variable.turn);
+						
+						update();
+					}
+				
+				
+
+				}
+				
+					var doc_h=$(document).height(),doc_w=$(document).width();
+					var tch=$(document).height()/2,tcw=$(document).width()/2;
+	var heg=180/doc_h,weg=720/doc_w;
+	
+	$(window).resize(function(){
+	
+		doc_h=$(document).height();
+		doc_w=$(document).width();
+		tch=$(document).height()/2,tcw=$(document).width()/2;
+		heg=180/doc_h,weg=720/doc_w;
+	
+	})
+	
+function turn_m(e){
+						
+						
+						if(Math.abs(e.pageX-pagex)>=Math.abs(e.pageY-pagey)){
+						
+							if(e.pageX!==pagex){
+						
+							variable.turn=((e.pageX-tcw)*weg);
+						
+							}
+						
+						}
+						
+						else{
+						
+							if(e.pageY!=pagey){
+						
+							variable.rot3d=((tch-e.pageY)*heg);
+						
+							}}
+							
+
+
+						
+						
+						update();
+						pagex=e.pageX;
+						pagey=e.pageY;
+					
+					}
+		
+		</script>
+		
+	</html>
